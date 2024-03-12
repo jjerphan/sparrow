@@ -25,17 +25,17 @@
 namespace sparrow
 {
     template <class T, bool is_const>
-    class layout_iterator
+    class primitive_layout_iterator
         : public iterator_base
         <
-            layout_iterator<T, is_const>,
+            primitive_layout_iterator<T, is_const>,
             mpl::constify_t<T, is_const>,
             std::contiguous_iterator_tag
         >
     {
     public:
 
-        using self_type = layout_iterator<T, is_const>;
+        using self_type = primitive_layout_iterator<T, is_const>;
         using base_type = iterator_base
         <
             self_type,
@@ -46,8 +46,8 @@ namespace sparrow
 
         // Required so that std::ranges::end(p) is
         // valid when p is a primitive_layout.
-        layout_iterator() = default;
-        explicit layout_iterator(pointer p);
+        primitive_layout_iterator() = default;
+        explicit primitive_layout_iterator(pointer p);
 
     private:
 
@@ -87,8 +87,8 @@ namespace sparrow
 
         explicit primitive_layout(array_data p);
 
-        using iterator = layout_iterator<T, false>;
-        using const_iterator = layout_iterator<T, true>;
+        using iterator = primitive_layout_iterator<T, false>;
+        using const_iterator = primitive_layout_iterator<T, true>;
 
         size_type size() const;
         reference element(size_type i);
@@ -153,54 +153,54 @@ namespace sparrow
 
     };
 
-    /**********************************
-    * layout_iterator implementation *
-    **********************************/
+    /********************************************
+     * primitive_layout_iterator implementation *
+     *******************************************/
 
     template <class T, bool is_const>
-    layout_iterator<T, is_const>::layout_iterator(pointer pointer)
+    primitive_layout_iterator<T, is_const>::primitive_layout_iterator(pointer pointer)
         : m_pointer(pointer), m_index(0)
     {
     }
 
     template <class T, bool is_const>
-    auto layout_iterator<T, is_const>::dereference() const -> reference
+    auto primitive_layout_iterator<T, is_const>::dereference() const -> reference
     {
         return m_pointer[m_index];
     }
 
     template <class T, bool is_const>
-    void layout_iterator<T, is_const>::increment()
+    void primitive_layout_iterator<T, is_const>::increment()
     {
         ++m_index;
     }
 
     template <class T, bool is_const>
-    void layout_iterator<T, is_const>::decrement()
+    void primitive_layout_iterator<T, is_const>::decrement()
     {
         --m_index;
     }
 
     template <class T, bool is_const>
-    void layout_iterator<T, is_const>::advance(difference_type n)
+    void primitive_layout_iterator<T, is_const>::advance(difference_type n)
     {
         m_index += n;
     }
 
     template <class T, bool is_const>
-    auto layout_iterator<T, is_const>::distance_to(const self_type& rhs) const -> difference_type
+    auto primitive_layout_iterator<T, is_const>::distance_to(const self_type& rhs) const -> difference_type
     {
         return rhs.m_index - m_index;
     }
 
     template <class T, bool is_const>
-    bool layout_iterator<T, is_const>::equal(const self_type& rhs) const
+    bool primitive_layout_iterator<T, is_const>::equal(const self_type& rhs) const
     {
         return distance_to(rhs) == 0;
     }
 
     template <class T, bool is_const>
-    bool layout_iterator<T, is_const>::less_than(const self_type& rhs) const
+    bool primitive_layout_iterator<T, is_const>::less_than(const self_type& rhs) const
     {
         return distance_to(rhs) > 0;
     }
