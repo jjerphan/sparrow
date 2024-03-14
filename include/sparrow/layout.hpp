@@ -112,6 +112,47 @@ namespace sparrow
 
     };
 
+    template <class T>
+    class variable_size_layout
+    {
+    public:
+
+        using self_type = variable_size_layout<T>;
+        using value_type = T;
+        using reference = T&;
+        using const_reference = const T&;
+        using pointer = T*;
+        using const_pointer = const T*;
+        using size_type = std::size_t;
+        using difference_type = std::ptrdiff_t;
+
+        explicit primitive_layout(array_data p);
+
+        using iterator = layout_iterator<T, false>;
+        using const_iterator = layout_iterator<T, true>;
+
+        size_type size() const;
+        reference element(size_type i);
+        const_reference element(size_type i) const;
+
+        iterator begin();
+        iterator end();
+
+        const_iterator begin() const;
+        const_iterator end() const;
+
+        const_iterator cbegin() const;
+        const_iterator cend() const ;
+
+    private:
+        // We only use the first buffer and the bitmap.
+        array_data m_data;
+
+        pointer data();
+        const_pointer data() const;
+
+    };
+
     /**********************************
     * layout_iterator implementation *
     **********************************/
